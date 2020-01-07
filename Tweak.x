@@ -1,3 +1,5 @@
+static BOOL show = NO;
+
 @interface PonyDebuggerInjected : NSObject {
 @private
 }
@@ -26,11 +28,24 @@
         return self;
 }
 
--(void)inject {
-	[[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+-(void)inject{
+	if(show)
+		[[[UIApplication sharedApplication] keyWindow] endEditing:NO];
 }
+
+-(void)show:(NSNotification *)notification{
+	CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+	int height = MIN(keyboardSize.height,keyboardSize.width);
+	if(height > 50)
+		show = YES;
+	else
+		show = NO;
+}
+
 @end
 
 %ctor {
+	%init;
 	[[NSNotificationCenter defaultCenter] addObserver:[PonyDebuggerInjected sharedInstance] selector:@selector(inject) name:UIApplicationWillResignActiveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:[PonyDebuggerInjected sharedInstance] selector:@selector(show:) name:UIKeyboardDidShowNotification object:nil];
 }
