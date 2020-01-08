@@ -30,7 +30,7 @@ static BOOL show = NO;
 
 -(void)inject{
 	if(show)
-		[[[UIApplication sharedApplication] keyWindow] endEditing:NO];
+		[[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
 -(void)show:(NSNotification *)notification{

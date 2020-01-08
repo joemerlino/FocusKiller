@@ -1,7 +1,7 @@
 Package: com.joemerlino.focuskiller
 Name: FocusKiller
 Depends: mobilesubstrate
-Version: 0.0.5
+Version: 0.0.6
 Architecture: iphoneos-arm
 Description: Hides keyboard once apps are in background
 Maintainer: Joe Merlino
