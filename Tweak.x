@@ -1,5 +1,3 @@
-static BOOL show = NO;
-
 @interface PonyDebuggerInjected : NSObject {
 @private
 }
@@ -29,17 +27,10 @@ static BOOL show = NO;
 }
 
 -(void)inject{
-	if(show)
-		[[[UIApplication sharedApplication] keyWindow] endEditing:YES];
-}
-
--(void)show:(NSNotification *)notification{
-	CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-	int height = MIN(keyboardSize.height,keyboardSize.width);
-	if(height > 50)
-		show = YES;
-	else
-		show = NO;
+		NSArray *windows = [[UIApplication sharedApplication] windows];
+		for (UIWindow *string in windows)
+			if([string isKindOfClass:NSClassFromString(@"UIRemoteKeyboardWindow")])
+		    	[[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
 @end
@@ -47,5 +38,4 @@ static BOOL show = NO;
 %ctor {
 	%init;
 	[[NSNotificationCenter defaultCenter] addObserver:[PonyDebuggerInjected sharedInstance] selector:@selector(inject) name:UIApplicationWillResignActiveNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:[PonyDebuggerInjected sharedInstance] selector:@selector(show:) name:UIKeyboardDidShowNotification object:nil];
 }
